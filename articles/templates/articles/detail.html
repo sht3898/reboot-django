@@ -1,0 +1,10 @@
+{% extends 'articles/base.html' %}
+{% block body %}
+<div class="container mt-5">
+    <h1>{{article.title}}</h1>
+    <p>{{article.content}}</p>
+    <a href="/articles/{{article.pk}}/edit/" class="btn btn-primary">수정하기</a>
+    <a href="/articles/{{article.pk}}/delete/" class="btn btn-primary">삭제하기</a>
+    <a href="/articles/" class="btn btn-secondary">목록으로</a>
+</div>
+{% endblock  %}

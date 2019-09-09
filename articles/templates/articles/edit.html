@@ -1,0 +1,19 @@
+{% extends 'articles/base.html' %}
+{% block body %}
+<div class="title my-5">
+    <h1><a href="/articles/">게시물 정보 수정</a></h1>
+</div>
+<form action="/articles/{{article.pk}}/update">
+    <div class="form-group">
+        <label for="exampleInputEmail1">제목</label>
+        <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp"
+            placeholder="제목을 입력하세요" value="{{article.title}}">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">내용</label>
+        <input type="text" class="form-control" id="content" name="content" value="{{article.content}}">
+    </div>
+    <button type="submit" class="btn btn-primary">수정하기</button>
+    <a class="btn btn-secondary" href="/articles/{{ article.pk }}">돌아가기</a>
+</form>
+{% endblock  %}
