@@ -3,7 +3,8 @@
 <div class="title my-5">
     <h1><a href="/articles/">게시물 정보 수정</a></h1>
 </div>
-<form action="/articles/{{article.pk}}/update">
+<form action="/articles/{{article.pk}}/update" method="POST">
+{% csrf_token %}
     <div class="form-group">
         <label for="title">제목</label>
         <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp"

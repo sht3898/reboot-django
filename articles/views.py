@@ -21,14 +21,14 @@ def new(request):
     return render(request, 'articles/new.html')
 
 def create(request):
-    title = request.GET.get('title')
-    content = request.GET.get('content')
+    title = request.POST.get('title')
+    content = request.POST.get('content')
     article = Article.objects.create(title=title,content=content)
+    # 위의 처럼 하거나 밑에처럼하기
+    # article = Article()
+    # article.title = request.GET.get('title')
+    # article.content = request.GET.get('content')
     article.save()
-    context = {
-        'title' : title,
-        'content' : content
-    }
     return redirect('/articles/{}/'.format(article.pk))
 
 def edit(request, article_pk):
@@ -40,8 +40,8 @@ def edit(request, article_pk):
 
 def update(request, article_pk):
     article = Article.objects.get(pk=article_pk)
-    article.title = request.GET.get('title')
-    article.content = request.GET.get('content')
+    article.title = request.POST.get('title')
+    article.content = request.POST.get('content')
     article.save()
     return redirect('/articles/{}/'.format(article.pk))
 
