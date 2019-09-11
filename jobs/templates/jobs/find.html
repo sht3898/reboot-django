@@ -1,5 +1,6 @@
 {% extends 'jobs/base.html' %}
 {% block body %}
-<h1>{{job.name}}은 {{job.job}}입니다</h1>
+<h1>{{job.name}}님은 {{job.job}}입니다</h1>
+<img src="{{image_url}}" alt="{{job.job}}">
 <a href="/jobs/">목록으로</a>
 {% endblock  %}
