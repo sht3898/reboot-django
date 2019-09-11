@@ -9,7 +9,6 @@ def index(request):
     }
     return render(request, 'articles/index.html', context)
 
-
 def detail(request, article_pk):
     article = Article.objects.get(pk=article_pk)
     context = {

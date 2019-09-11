@@ -116,7 +116,7 @@ class Article(models.Model):
 
 from django.contrib import admin
 from django.urls import path, include	# include 추가
-from articles import views	# articles의 views 추가
+# from articles import views	# articles의 views 추가
 
 urlpatterns = [
     path('admin/', admin.site.urls),
