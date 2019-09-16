@@ -4,6 +4,3 @@ from django.db import models
 class Job(models.Model):
     name = models.CharField(max_length=30)
     job = models.CharField(max_length=30)
-
-class Comment(models.Model):
-    

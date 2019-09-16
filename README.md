@@ -292,3 +292,225 @@ $ python manage.py runserver
 
 ```
 
+
+
+# Reporter, Comment 모델 생성
+
+## 모델 생성
+
+```python
+# Create your models here.
+# Reporter(1) - Article(N)
+# reporter - name
+class Reporter(models.Model):
+    name = models.CharField(max_length=30)
+
+
+class Article(models.Model):
+    title = models.CharField(max_length=30)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    reporter = models.ForeignKey(Reporter, on_delete=models.CASCADE)
+
+
+# Article(1) - Comment(N)
+# comment - content
+class Comment(models.Model):
+    comment = models.CharField(max_length=30)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+```
+
+
+
+## migrate
+
+```bash
+$ python manage.py makemigrations
+
+$ python manage.py migrate
+```
+
+여기서 오류 발생하면 migrations, db.sqlite3 파일 제거
+
+
+
+## Shell_Plus 실행
+
+```bash
+$ pip install django_extensions
+# settings.py에서 app에 django_extensions 추가
+$ python manage.py shell_plus
+```
+
+
+
+## reporter 생성
+
+```bash
+In [1]: reporter1 = Reporter()
+
+In [2]: reporter1.name = '홍길동'
+
+In [3]: reporter1.save()
+
+In [4]: reporter2 = Reporter.objects.create(name='철수')
+```
+
+In[1]~[3]과 In[4]는 같은 방법
+
+
+
+## 오브젝트를 통한 방법
+
+```bash
+article.title = '1번글'
+
+article.content = '1번 내용'
+
+article.reporter = reporter1
+# reporter1을 저장하지 않으면 constraint 오류
+article.save()
+```
+
+
+
+## article_set을 통해서
+
+```shell
+In [19]: article2 = Article.objects.create(title='제목', content='내용', reporter=1)
+# 이렇게 reporter에 1을 저장하면 오류 발생 => 1이 아닌 Reporter 인자를 써야함
+
+In [20]: article2 = Article.objects.create(title='제목', content='내용', reporter_id=1)
+# 이렇게 reporter가 아닌 reporter_id로 쓰면 가능
+
+In [21]: article3 = Article.objects.create(title='제목', content='내용', reporter=reporter1)
+
+In [22]: article4 = Article()
+
+In [23]: article4.title = '제목'
+
+In [24]: article4.content = '내용'
+
+In [25]: article.reporter_id = 1
+
+In [26]: article.save()
+```
+
+
+
+## 쿼리 조회
+
+```shell
+In [27]: reporter2.article_set.all()
+Out[27]: <QuerySet []>
+
+In [28]: reporter1.article_set.all()
+Out[28]: <QuerySet [<Article: Article object (1)>, <Article: Article object (2)>, <Article: Article object (3)>]>
+
+In [29]: Article.objects.filter(reporter_id=1)
+Out[29]: <QuerySet [<Article: Article object (1)>, <Article: Article object (2)>, <Article: Article object (3)>]>
+
+```
+
+In[28]과 In[29]는 동일한 결과
+
+
+
+```shell
+In [30]: article3
+Out[30]: <Article: Article object (3)>
+
+In [31]: article3.reporter
+Out[31]: <Reporter: Reporter object (1)>
+
+In [32]: article3.reporter_id
+Out[32]: 1
+```
+
+
+
+
+
+
+```shell
+In [33]: article4.reporter = reporter2
+
+In [34]: article4.save()
+
+In [35]: article4.reporter
+Out[35]: <Reporter: Reporter object (2)>
+
+In [36]: reporter1.article_set.add(article4)
+
+In [37]: article4.reporter
+Out[37]: <Reporter: Reporter object (1)>
+```
+
+
+
+
+
+## article1에 댓글 두개 추가
+
+```shell
+article1.
+```
+
+
+
+
+
+## 마지막 댓글의 기사를 작성한 기자
+
+```shell
+In [62]: comment2.article.reporter
+Out[62]: <Reporter: Reporter object (1)>
+
+In [63]: comment2.article.reporter.name
+Out[63]: '서현택'
+```
+
+
+
+## 기사별 댓글 내용 출력
+
+```shell
+In [64]: articles = Article.objects.all()
+
+In [65]: articles
+Out[65]: <QuerySet [<Article: Article object (1)>, <Article: Article object (2)>, <Article: Article object (3)>, <Article: Article object (4)>]>
+
+In [66]: for article in articles:
+    ...:     for comment in article.comment_set_all():
+    ...:         print(comment.content)
+    
+댓글2
+댓글1
+```
+
+
+
+## 기자별 기사 내용 출력
+
+```shell
+In [82]: reporters = Reporter.objects.all()
+
+In [83]: reporters
+Out[83]: <QuerySet [<Reporter: Reporter object (1)>, <Reporter: Reporter object (2)>]>
+
+In [84]: for reporter in reporters:
+    ...:     print(reporter.name)
+    ...:     for article in reporter.article_set.all():
+    ...:         print(article.title)
+```
+
+
+
+## reporter1의 기사 갯수
+
+```shell
+In [85]: reporter1.article_set.count()
+Out[85]: 4
+```
+
